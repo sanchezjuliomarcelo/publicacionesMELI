@@ -1,47 +1,28 @@
-body {
-    font-family: Arial, sans-serif;
-  }
-  
-  .container {
+.container {
     max-width: 800px;
     margin: 0 auto;
-    padding: 20px;
   }
   
-  .search-container {
-    margin-bottom: 20px;
-  }
-  
-  input[type="text"] {
-    width: 70%;
-    padding: 10px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: #fff;
-    border: none;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #0056b3;
-  }
-  
-  #item-details {
+  .item-details {
     margin-top: 20px;
   }
   
-  .item-property {
-    margin-bottom: 10px;
+  .table {
+    width: 100%;
+    border-collapse: collapse;
   }
   
-  .item-property label {
-    font-weight: bold;
+  .table th,
+  .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
   }
   
-  .item-property span {
-    margin-left: 10px;
+  .table th {
+    background-color: #f2f2f2;
+  }
+  
+  .table tr:nth-child(even) {
+    background-color: #f2f2f2;
   }
   

@@ -1,69 +1,43 @@
 function searchItem() {
-    const itemId = document.getElementById('item-id').value;
-    const url = `https://api.mercadolibre.com/items/${itemId}?include_attributes=all`;
-  
-    fetch(url)
-      .then(response => response.json())
-      .then(data => displayItemDetails(data))
-      .catch(error => console.error('Error:', error));
-  }
-  
-  function displayItemDetails(item) {
-    const itemDetailsContainer = document.getElementById('item-details');
-    itemDetailsContainer.innerHTML = '';
-  
-    const table = document.createElement('table');
-    table.classList.add('table');
-  
-    const propertiesToShow = ['id', 'title', 'price', 'base_price', 'original_price', 'initial_quantity', 'listing_type_id', 'condition', 'permalink', 'status', 'warranty', 'catalog_product_id', 'last_updated'];
-  
-    propertiesToShow.forEach(property => {
-      if (item.hasOwnProperty(property)) {
-        const row = table.insertRow();
-        const cell1 = row.insertCell(0);
-        const cell2 = row.insertCell(1);
-  
-        cell1.textContent = property;
-        const value = item[property];
-        if (typeof value === 'object' && value !== null) {
-          // If the property value is an object, format it for display
-          let formattedValue = '';
-          for (const subKey in value) {
-            if (value.hasOwnProperty(subKey)) {
-              if (typeof value[subKey] === 'object' && value[subKey] !== null) {
-                formattedValue += `${subKey}:\n`;
-                for (const subSubKey in value[subKey]) {
-                  if (value[subKey].hasOwnProperty(subSubKey)) {
-                    formattedValue += `  ${subSubKey}: ${JSON.stringify(value[subKey][subSubKey])}\n`;
-                  }
-                }
-              } else {
-                formattedValue += `${subKey}: ${JSON.stringify(value[subKey])}\n`;
-              }
-            }
-          }
-          cell2.textContent = formattedValue;
-        } else {
-          cell2.textContent = value;
-        }
-      }
-    });
-  
-    // Show shipping details in separate columns
-    for (const key in item.shipping) {
-      if (item.shipping.hasOwnProperty(key)) {
-        const row = table.insertRow();
-        const cell1 = row.insertCell(0);
-        const cell2 = row.insertCell(1);
-  
-        cell1.textContent = key;
-        cell2.textContent = JSON.stringify(item.shipping[key]);
-      }
-    }
-  
-    itemDetailsContainer.appendChild(table);
-  }
-  
-  
-  
+    var itemId = document.getElementById('item-id').value;
+
+    // Reset item details
+    document.getElementById('item-details').innerHTML = '';
+
+    // Fetch item details
+    fetch('https://api.mercadolibre.com/items/' + itemId)
+        .then(response => response.json())
+        .then(data => {
+            // Display item details
+            var itemDetailsHtml = '<table class="table">';
+            itemDetailsHtml += '<tr><th>ID</th><td>' + data.id + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Title</th><td>' + data.title + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Price</th><td>' + data.price + ' ' + data.currency_id + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Base Price</th><td>' + data.base_price + ' ' + data.currency_id + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Original Price</th><td>' + data.original_price + ' ' + data.currency_id + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Initial Quantity</th><td>' + data.initial_quantity + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Listing Type ID</th><td>' + data.listing_type_id + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Condition</th><td>' + data.condition + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Permalink</th><td><a href="' + data.permalink + '">' + data.permalink + '</a></td></tr>';
+            itemDetailsHtml += '<tr><th>Shipping Mode</th><td>' + data.shipping.mode + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Shipping Methods</th><td>' + data.shipping.methods.join(', ') + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Shipping Dimensions</th><td>' + JSON.stringify(data.shipping.dimensions) + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Local Pick Up</th><td>' + data.shipping.local_pick_up + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Free Shipping</th><td>' + data.shipping.free_shipping + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Logistic Type</th><td>' + data.shipping.logistic_type + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Store Pick Up</th><td>' + data.shipping.store_pick_up + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Status</th><td>' + data.status + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Warranty</th><td>' + data.warranty + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Catalog Product ID</th><td>' + data.catalog_product_id + '</td></tr>';
+            itemDetailsHtml += '<tr><th>Last Updated</th><td>' + data.last_updated + '</td></tr>';
+            itemDetailsHtml += '</table>';
+
+            document.getElementById('item-details').innerHTML = itemDetailsHtml;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('item-details').innerHTML = '<p>Error fetching item details. Please try again later.</p>';
+        });
+}
+
   
